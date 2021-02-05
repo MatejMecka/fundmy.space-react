@@ -5,7 +5,8 @@ export default async function signUpRequest (data){
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include'
     }).then((response) => { 
         return response.json().then((data) => {
             console.log('Success:', data);

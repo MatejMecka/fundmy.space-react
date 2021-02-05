@@ -4,7 +4,8 @@ export default async function loginRequest (data){
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include'
     }).then((response) => { 
         return response.json().then((data) => {
             console.log('Success:', data);

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              {signUp ? 'Sign Up' : 'Sign In'}
+              {signUp ? 'Sign up' : 'Sign in'}
             </Typography>
               {signUp ? <SignUpSide /> : <SignInSide /> }
           </div>

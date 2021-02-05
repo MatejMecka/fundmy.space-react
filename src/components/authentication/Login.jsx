@@ -6,8 +6,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
-import loginRequest from "../../requests/login";
+import loginRequest from "../requests/login";
 import Alert from '../general/alert';
+import history from '../../history';
+import { useHistory } from "react-router-dom";
 
 export default function SignInSide() {
     const [open, setOpen] = React.useState(false);
@@ -33,11 +35,14 @@ export default function SignInSide() {
 
     const classes = useStyles();
     const { register, handleSubmit, errors } = useForm();
+    const history = useHistory();
 
     const onSubmit = async (data) => {
         loginRequest(data).then(response => {
             const [status, responseText] = response
-            if(!status){
+            if(status){
+                history.push('/dashboard')
+            } else {
                 setMessage(responseText)
                 console.log('Message: ' + message   )
                 setOpen(true);
