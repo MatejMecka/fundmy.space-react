@@ -15,14 +15,15 @@ const useStyles = makeStyles({
     transform: "scale(0.8)"
   },
   title: {
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'left'
   },
   pos: {
     marginBottom: 12
   },
   value: {
-    textAlign: 'left'
+    textAlign: 'left',
+    fontSize: 48
   }
 });
 
@@ -38,10 +39,10 @@ export default function BalanceCard() {
             color="textSecondary"
             gutterBottom
           >
-            Stellar Lumens (XLM)
+            <b>Stellar Lumens (XLM)</b>
           </Typography>
           <Typography variant="h5" component="h2" className={classes.value}>
-            <b>1600</b>
+            1.600
           </Typography>
         </CardContent>
       </Card>
