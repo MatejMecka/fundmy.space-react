@@ -11,7 +11,12 @@ export default function Dashboard() {
     const useStyles = makeStyles((theme) => ({
         root: {
           minWidth: 275,
-          padding: "50px"
+          padding: "50px",
+        },
+        thatDiv: {
+          display: "flex",
+          alignItems: "center",
+          alignContent: "center"
         },
         bullet: {
           display: "inline-block",
@@ -19,7 +24,8 @@ export default function Dashboard() {
           transform: "scale(0.8)"
         },
         title: {
-          textAlign: 'left'
+          textAlign: 'left',
+          paddingBottom: "25px"
         },
         no_results: {
             textAlign: 'center'
@@ -52,15 +58,25 @@ export default function Dashboard() {
     const classes = useStyles();
 
     return (
-        <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={12}>
+      <div className={classes.thatDiv}>
+        <Grid container className={classes.root} spacing={2} justify="center" alignItems="center">
+            <Grid container item>
             <Typography variant="h4" component="h4" className={classes.title}>Balances</Typography>
-                <Grid item xs={6}>
-                    <BalanceCard/>
+                <Grid item container direction="row" justify="center" alignItems="center">
+                  <Grid item xs={12} sm={4}>
+                      <BalanceCard/>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <BalanceCard/>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <BalanceCard/>
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid container justify="center" alignItems="center" direction="column" spacing={2}>
-                <Grid item xs={12}>
+            <Grid container item justify="center" alignItems="center"> 
+            <Typography variant="h4" component="h4" className={classes.title}>Claimable Balances</Typography>
+                <Grid item container xs={12} >
                     <Avatar className={classes.avatar}>
                         <SentimentVeryDissatisfiedIcon />
                     </Avatar>
@@ -68,7 +84,8 @@ export default function Dashboard() {
                 <Typography variant="h4" component="h4" className={classes.no_results}>No pending claimable balances.</Typography>
             </Grid>
 
-            <Grid container justify="center" alignItems="center" direction="column" spacing={50} m={50}>
+            <Grid container item justify="center" alignItems="center">
+            <Typography variant="h4" component="h4" className={classes.title}>Past operations</Typography>
                 <Grid item xs={12}>
                     <Avatar className={classes.avatar}>
                         <SentimentVeryDissatisfiedIcon />
@@ -78,5 +95,6 @@ export default function Dashboard() {
             </Grid>
 
         </Grid>
+      </div>
     )
 }
