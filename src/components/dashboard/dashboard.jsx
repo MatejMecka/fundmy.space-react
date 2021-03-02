@@ -1,16 +1,38 @@
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
-import { spacing } from '@material-ui/system';
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import BalanceCard from './elements/currency_card' ;
+import NotFound from "./elements/not-found";
+import ClaimableBalanceTable from "./elements/claimable_balances_table";
+import OperationsTable from "./elements/operations_table";
+import balancesRequest from '../requests/balances';
+import Navbar from './elements/appbar';
+import claimableBalancesRequest from '../requests/claimable_balances';
+import operationsRequest from '../requests/operations';
 import { makeStyles } from "@material-ui/core/styles";
-export default function Dashboard() {
 
+function ClaimableBalances(data){
+  console.log(data['data'])
+  if(data['data'].length != 0){
+    return <ClaimableBalanceTable data={data["data"]}/>
+  } else {
+    return <NotFound message="No claimable balances have been found"/>
+  }
+}
+
+function Operations(data){
+  console.log(data['data'])
+  if(data['data'].length != 0){
+    return <OperationsTable data={data["data"]}/>
+  } else {
+    return <NotFound message="No past operations have been found"/>
+  }
+}
+
+export default function Dashboard() {
     const useStyles = makeStyles((theme) => ({
         root: {
- //         minWidth: 275,
+          minWidth: 275,
           padding: "50px",
         },
         thatDiv: {
@@ -26,14 +48,6 @@ export default function Dashboard() {
         title: {
           textAlign: 'left',
           paddingBottom: "25px"
-        },
-        no_results: {
-            textAlign: 'center'
-        },
-        errorMessage: {
-          display: 'flex',
-          alignItems: 'center',
-          flexWrap: 'wrap',
         },
         pos: {
           marginBottom: 12
@@ -51,58 +65,82 @@ export default function Dashboard() {
             alignItems: 'center',
             flexWrap: 'wrap',
         },
-        avatar: {
-            margin: theme.spacing(1),
-            backgroundColor: theme.palette.secondary.main,
-          },
         divider: {
             border: `1px solid ${theme.palette.divider}`
         },
         card: {
           paddingBottom: "25px"
+        },
+        lastTitle: {
+          paddingTop: "25px"
         }
       }));
 
     const classes = useStyles();
+    const [isLoaded, setIsLoaded] = React.useState(false);
+    const [balances, setBalances] = React.useState([]);
+    const [claimableBalances, setClaimableBalances] = React.useState([]);
+    const [operations, setOperations] = React.useState([]);
+
+
+    React.useEffect(() => {
+      balancesRequest().then(data => {
+        const [status, responseText] = data
+        setIsLoaded(true);
+        setBalances(responseText);
+        console.log(responseText);
+      })
+
+      claimableBalancesRequest().then(data => {
+        const [status, responseText] = data
+        setIsLoaded(true);
+        setClaimableBalances(responseText);
+        console.log(responseText);
+      })
+
+      operationsRequest().then(data => {
+        const [status, responseText] = data
+        setIsLoaded(true);
+        setOperations(responseText);
+        console.log(responseText);
+      })
+
+
+    }, []);
+
 
     return (
+      <div>
+      <Navbar loggedIn={true}/>
       <div className={classes.thatDiv}>
-        <Grid container className={classes.root} spacing={0 } justify="center" alignItems="center" direction="column">
-            <Grid container item spacing={5}>
+        <Grid container className={classes.root} spacing={0} justify="center" alignItems="center" direction="column">
+            <Grid container item>
             <Typography variant="h4" component="h4" className={classes.title}>Balances</Typography>
-                <Grid item container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={12} sm={4} className={classes.card}>
-                      <BalanceCard/>
+                <Grid item container direction="row" justify="left" alignItems="left">
+                  {
+                    
+                    balances.map((object) => 
+                    <Grid item xs={3} sm={balances.length/3} className={classes.card}>
+                      <BalanceCard asset={object.asset_code} balance={object.balance}/>
                     </Grid>
-                    <Grid item xs={12} sm={4} className={classes.card}>
-                      <BalanceCard/>
-                    </Grid>
-                    <Grid item xs={12} sm={4} className={classes.card}>
-                      <BalanceCard/>
-                    </Grid>
-                </Grid>
+                      
+                  )
+                  
+                  }
+                </Grid> 
             </Grid>
             <Grid container item > 
             <Typography variant="h4" component="h4" className={classes.title}>Claimable Balances</Typography>
-                <Grid container item className={classes.errorMessage} direction="row">
-                    <Avatar className={classes.avatar}>
-                        <SentimentVeryDissatisfiedIcon />
-                    </Avatar>
-                    <Typography variant="h6" component="h4" className={classes.no_results}>No pending claimable balances.</Typography>
-                </Grid>
+              <ClaimableBalances data={claimableBalances}/>
             </Grid>
 
             <Grid container item >
-              <Typography variant="h4" component="h4" className={classes.title}>Past operations</Typography>
-              <Grid container item className={classes.errorMessage} direction="row">
-                  <Avatar className={classes.avatar}>
-                      <SentimentVeryDissatisfiedIcon />
-                  </Avatar>
-                  <Typography variant="body1" component="h4" className={classes.no_results}>No past operations.</Typography>
-              </Grid>
+              <Typography variant="h4" component="h4" className={`${classes.title} ${classes.lastTitle}`}>Past operations</Typography>
+              <Operations data={operations} />
             </Grid>
 
         </Grid>
+      </div>
       </div>
     )
 }

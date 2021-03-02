@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function BalanceCard() {
+export default function BalanceCard(props) {
   const classes = useStyles();
 
   return (
@@ -37,12 +37,12 @@ export default function BalanceCard() {
           <Typography
             className={classes.title}
             color="textSecondary"
-            gutterBottom
+            gutterBottom  
           >
-            <b>Stellar Lumens (XLM)</b>
+            <b>{props.asset}</b>
           </Typography>
           <Typography variant="h5" component="h2" className={classes.value}>
-            1.600
+            {props.balance}
           </Typography>
         </CardContent>
       </Card>

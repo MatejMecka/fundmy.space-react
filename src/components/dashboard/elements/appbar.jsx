@@ -7,6 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import { useHistory } from "react-router-dom";
+import logoutRequest from '../../requests/logout';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '../../general/alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,8 +29,10 @@ export default function Navbar(props) {
     const classes = useStyles();
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [message, setMessage] = React.useState('');
     const open = Boolean(anchorEl);
-  
+    const [open_alert, setOpen] = React.useState(false);
+
     const handleChange = (event) => {
       setAuth(event.target.checked);
     };
@@ -38,7 +44,23 @@ export default function Navbar(props) {
     const handleClose = () => {
       setAnchorEl(null);
     };
-  
+    
+    const history = useHistory();
+    const logOut = () => {
+      logoutRequest().then(response => {
+        const [status, responseText] = response
+        if(status){
+            history.push('/dashboard')
+        } else {
+            setMessage(responseText)
+            console.log('Message: ' + message)
+            setOpen(true);
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+    }
+
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -73,10 +95,16 @@ export default function Navbar(props) {
                 >
                   <MenuItem onClick={handleClose}>Profile</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={logOut()}>Log Out</MenuItem>
                 </Menu>
               </div>
           </Toolbar>
         </AppBar>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+              { message }
+          </Alert>
+        </Snackbar>
       </div>
     );
 

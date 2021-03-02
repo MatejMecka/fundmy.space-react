@@ -8,7 +8,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 import loginRequest from "../requests/login";
 import Alert from '../general/alert';
-import history from '../../history';
 import { useHistory } from "react-router-dom";
 
 export default function SignInSide() {
