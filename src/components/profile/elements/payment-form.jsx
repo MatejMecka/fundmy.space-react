@@ -83,7 +83,6 @@ export default function PaymentForm(props) {
             
         }
 
-
         console.log(props.data["public_key"])
         albedo.publicKey({
             token: 'sRqeood+3eD9SO8iDlLqIp+T0D3b+rjUAKhlyfSAk2Y='

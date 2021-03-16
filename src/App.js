@@ -11,19 +11,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
-function loggedIn(){
-    return userInfo().then(response => {
-        const [status, responseText] = response
-        if(status){
-            return true
-        } else {
-            return false
-        }
-    }).catch((error) => { 
-        console.log(error)
-    })
-}
+import SetupPage from './components/setup/setup';
+import SettingsPage from './components/settings/settings';
+import Page404 from './components/error_pages/404';
+import PrivateRoute from './protected_route';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -38,11 +29,7 @@ function App() {
     [prefersDarkMode],
   );
 
-
- let status = false
-  loggedIn().then(status =>{
-    status = status
-  });
+  const username = ""
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,10 +37,13 @@ function App() {
     <Router>
       <div className="App">
       <Switch>
+        <PrivateRoute exact path="/dashboard" component={() => <Dashboard username={username} /> } />
+        <PrivateRoute exact path="/authenticate" component={Authentication} />
+        <PrivateRoute path="/user/:username?" component={ProfilePage} />
+        <PrivateRoute exact path="/settings" component={SettingsPage} />
+        <PrivateRoute exact path="/setup" component={() => <SetupPage username={username}/>} />
         <Route exact path="/" />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/authenticate" component={Authentication} />
-        <Route path="/user/:username" component={ProfilePage} />
+        <Route component={Page404} />
       </Switch>
       </div>
     </Router>

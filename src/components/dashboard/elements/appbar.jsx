@@ -10,6 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import { useHistory } from "react-router-dom";
 import logoutRequest from '../../requests/logout';
 import Snackbar from '@material-ui/core/Snackbar';
+import Link from '@material-ui/core/Link';
 import Alert from '../../general/alert';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,8 @@ export default function Navbar(props) {
     const open = Boolean(anchorEl);
     const [open_alert, setOpen] = React.useState(false);
 
+    const preventDefault = (event) => event.preventDefault();
+
     const handleChange = (event) => {
       setAuth(event.target.checked);
     };
@@ -46,11 +49,12 @@ export default function Navbar(props) {
     };
     
     const history = useHistory();
+/*
     const logOut = () => {
       logoutRequest().then(response => {
         const [status, responseText] = response
         if(status){
-            history.push('/dashboard')
+            history.push('/authenticate')
         } else {
             setMessage(responseText)
             console.log('Message: ' + message)
@@ -59,14 +63,16 @@ export default function Navbar(props) {
     }).catch((error) => {
         console.log(error)
     })
-    }
+    }*/
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
+            <Link href="/dashboard" color="inherit" >
               FundMy.space
+              </Link>
             </Typography>
               <div>
                 <IconButton
@@ -93,9 +99,9 @@ export default function Navbar(props) {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={logOut()}>Log Out</MenuItem>
+                  <MenuItem component={Link} href={`/user`} >My Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>Settings</MenuItem>
+                  
                 </Menu>
               </div>
           </Toolbar>

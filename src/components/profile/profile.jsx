@@ -11,6 +11,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Navbar from '../dashboard/elements/appbar';
 import PaymentForm from './elements/payment-form';
 import profilePublicKey from '../requests/get_user_public_key';
+import loggedIn from '../requests/get_user_public_key';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,8 +38,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfilePage() {
-    const {username} = useParams()
+export default function ProfilePage(props) {
+    let {username} = useParams()
+
+    if(username === undefined){
+      username = ""
+    }
+
     const classes = useStyles();
 
     const [user, setUser] = React.useState({});
@@ -47,13 +53,19 @@ export default function ProfilePage() {
     
     React.useEffect(() => {
       profileRequest(username).then(data => {
-            const [status, responseText] = data
-            setUser(responseText);
-            console.log(responseText);
+          let [status, responseText] = data
+          if(username === ""){
+            responseText = data[1][0]
+          }
+          setUser(responseText);
+          console.log(responseText);
       })
 
       profilePublicKey(username).then(data => {
-        const [status, responseText] = data
+        let [status, responseText] = data
+        if(username === ""){
+          responseText = data[0]
+        }
         setPublicKey(responseText);
         console.log(responseText);
         setLoading(true);
@@ -61,9 +73,12 @@ export default function ProfilePage() {
     
     }, [])
 
+    console.log("USER")
+    console.log(user)
+
     return (
         <div>
-        <Navbar loggedIn={true}/>
+        <Navbar loggedIn={true} username={props.username}/>
         <Grid container className={classes.root} spacing={0} justify="center" alignItems="center" direction="column">
           {
             isLoading ? 

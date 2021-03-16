@@ -29,7 +29,7 @@ function Operations(data){
   }
 }
 
-export default function Dashboard() {
+export default function Dashboard(props) {
     const useStyles = makeStyles((theme) => ({
         root: {
           minWidth: 275,
@@ -111,7 +111,7 @@ export default function Dashboard() {
 
     return (
       <div>
-      <Navbar loggedIn={true}/>
+      <Navbar loggedIn={true} username={props.username}/>
       <div className={classes.thatDiv}>
         <Grid container className={classes.root} spacing={0} justify="center" alignItems="center" direction="column">
             <Grid container item>
